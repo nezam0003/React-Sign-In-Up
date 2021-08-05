@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { Marginer } from "../marginer";
-import { AccountContext } from "./AccountContext";
+import { useGlobalContext } from "../../AccountProvider";
+
 import {
   BoldLink,
   BoxContainer,
@@ -11,25 +12,61 @@ import {
 } from "./Common";
 
 const Login = () => {
-  const { switchToSignUp } = useContext(AccountContext);
+  const { switchToSignUp } = useGlobalContext();
+
+  const [loginUser, setLoginUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setLoginUser({ ...loginUser, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = loginUser;
+    if (email && password) {
+      alert("submitted successfully");
+      setLoginUser({
+        email: "",
+        password: "",
+      });
+    } else {
+      alert("give proper info");
+    }
+  };
+
   return (
     <>
       <BoxContainer>
         <FormContainer>
-          <Input type="email" placeholder="enter email" />
-          <Input type="password" placeholder="enter password" />
+          <Input
+            type="email"
+            placeholder="enter email"
+            name="email"
+            value={loginUser.email}
+            onChange={handleChange}
+          />
+          <Input
+            type="password"
+            placeholder="enter password"
+            name="password"
+            value={loginUser.password}
+            onChange={handleChange}
+          />
         </FormContainer>
         <Marginer direction="vertical" margin={10} />
         <MutedLink href="#">Forget your password ?</MutedLink>
         <Marginer direction="vertical" margin="1.6em" />
-        <SubmitButton type="submit">Signin</SubmitButton>
+        <SubmitButton type="submit" onClick={handleSubmit}>
+          Signin
+        </SubmitButton>
         <Marginer direction="vertical" margin="1em" />
-        <MutedLink href="#">
-          Don't have an account ?{" "}
-          <BoldLink href="#" onClick={switchToSignUp}>
-            Signup
-          </BoldLink>
-        </MutedLink>
+        <MutedLink href="#">Don't have an account ?</MutedLink>
+        <BoldLink href="#" onClick={switchToSignUp}>
+          Signup
+        </BoldLink>
       </BoxContainer>
     </>
   );
